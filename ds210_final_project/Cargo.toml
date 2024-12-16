@@ -1,0 +1,10 @@
+[package]
+name = "ds210_final_project"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+petgraph = "0.6"
+ndarray = "0.15"
+plotters = "0.3"
+rand = "0.8"

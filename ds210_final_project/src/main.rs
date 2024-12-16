@@ -62,7 +62,7 @@ fn create_graph(data: &[JobCategory]) -> (Graph<(String, f64), f64>, HashMap<Str
     for (i, job1) in data.iter().enumerate() {
         for job2 in data.iter().skip(i + 1) {
             let similarity = (job1.male_percentage - job2.male_percentage).abs();
-            if similarity < 10.0 {  // Connect jobs with similar male percentages
+            if similarity < 10.0 {  
                 let node1 = node_indices[&job1.name];
                 let node2 = node_indices[&job2.name];
                 graph.add_edge(node1, node2, similarity);
@@ -96,7 +96,6 @@ fn analyze_distribution(name: &str, data: &[usize]) {
     let total: usize = data.iter().sum();
     let mean = total as f64 / data.len() as f64;
     
-    // Check if mean calculation is valid
     if mean.is_nan() || mean.is_infinite() {
         println!("Mean calculation resulted in NaN or infinite value.");
         return;
@@ -117,7 +116,6 @@ fn analyze_distribution(name: &str, data: &[usize]) {
     println!("  Minimum: {}", data.iter().min().unwrap());
     println!("  Maximum: {}", data.iter().max().unwrap());
 
-    // Log-transform the data for power-law analysis
     let log_data: Vec<f64> = data.iter().filter(|&&x| x > 0).map(|&x| (x as f64).ln()).collect();
     
     if !log_data.is_empty() {
@@ -145,9 +143,8 @@ fn analyze_distribution(name: &str, data: &[usize]) {
 fn estimate_power_law_parameters(log_data: &[f64]) -> (f64, f64) {
     let n = log_data.len() as f64;
     
-   // Ensure we have enough data points to avoid division by zero
    if n <= 1.0 {
-       return (f64::NAN, f64::NAN); // Not enough data to estimate parameters
+       return (f64::NAN, f64::NAN); 
    }
    
    let sum: f64 = log_data.iter().sum();
@@ -171,7 +168,6 @@ fn plot_distribution(title: &str, data: &[usize], filename: &str) -> Result<(), 
    let root = BitMapBackend::new(filename, (800, 600)).into_drawing_area();
    root.fill(&WHITE)?;
 
-   // Ensure max_value is at least 1 to avoid log(0)
    let max_value = *data.iter().max().unwrap_or(&1) as f64;
    let mut chart = ChartBuilder::on(&root)
        .caption(title, ("sans-serif", 40).into_font())
